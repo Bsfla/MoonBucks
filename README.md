@@ -1,6 +1,24 @@
+# 😊바닐라 자바스크립트로 만드는 상태관리 앱😊
+> 기본기에 충실해지기 위해 같은 앱을 다음 4가지 버전으로 나누어 개발해볼 예정입니다.
+
+<br>
+
+
+- `v1`: 앱 (문벅스)의 요구사항에 맞추어 라이브러리 없이 순수 자바스킙트로 기능구현을 완료합니다 
+
+- `v2`: 구현 완료된 앱을  컴포넌트 단위로 리팩토링하여 구현합니다.
+
+- `v3`: 기존 자바스크립트 코드를 타입스크립트로 전환합니다.
+
+- `v4`: 테스트 코드를 작성합니다. (jest, cypress)
+
+<br>
+
 <br/>
+<details><summary>📹자바스크립트 문 벅스 요구사항, <strong>자세히보기!!</strong>👈</summary>
+<br>
 <p align="middle">
-  <img width="200px;" src="./src/images/moonbucks.png"/>
+ <img width="200px;" src="./src/images/moonbucks.png"/>
 </p>
 <h2 align="middle">JS 문벅스 카페메뉴 앱</h2>
 <p align="middle">Vanilla JS로 구현 하는 상태관리가 가능한 카페메뉴 앱</p>
@@ -26,18 +44,6 @@
 
 블랙커피처럼 서로를 자극해주고, 동기부여 해주며, 그 성장과정으로 인해 의미있는 가치를 만들어내고자 하는  
 **개발자 커뮤니티** ☕️ **Black Coffee**입니다.
-
-<br/>
-
-## 🔥 Projects!
-
-<p align="middle">
-  <img width="400" src="./src/images/moonbucks-main.png">
-</p>
-
-<p align="middle">
-  <a href="https://blackcoffee-study.github.io/moonbucks-menu/">🖥️ 데모 링크</a>
-</p>
 
 <br/>
 
@@ -244,3 +250,10 @@ live-server 폴더명
 ## 📝 License
 
 This project is [MIT](https://github.com/blackcoffee-study/moonbucks-menu/blob/main/LICENSE) licensed.
+    
+<br>
+
+</details>
+
+<br>
+
