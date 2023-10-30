@@ -6,34 +6,48 @@
 // 수정
 // 삭제
 
-import { $ } from "../utils/dom";
-import { store } from "../store/store";
+// 1. 웹서버를 띄운다
+// 2. 서버에 새로운 메뉴가 추가될 수 있도록 요청한다.
+// 3. 서버에 카테고리별 메뉴리스트를 불러온다.
+// 4. 서버에 카테고리 별 메뉴리스트를 불러온다.
+// 5. 서버에 메뉴가 수정 될 수 있도록 요청한다
+// 6. 서버에 메뉴의 품절상태가 토글될 수 있도록 요청한다.
+// 7. 서버에 메뉴가 삭제 될 수 있도록 요청한다.
+
+// localStorage에 저장하는 로직은 지운다.
+// fetch 비동기 api를 사용하는 부분을 async await을 사용하여 구현한다.
+
+// API 통신이 실패하는 경우에 대해 사용자가 알 수 있게 alert로 예외 처리를 진행한다
+
+// 중복되는 메뉴는 추가할 수 없다 .
+import { $ } from "./utils/dom.js";
+import store from "./store/index.js";
+import MenuApi from "./api/index.js";
 
 function App() {
   this.menu = {
     espresso: [],
     frappuccino: [],
+    blended: [],
     teavana: [],
-    tibana: [],
     desert: [],
   };
   this.category = "espresso";
-  this.init = () => {
-    const menu = store.getStorage();
-
-    if (menu) {
-      this.menu = menu;
-    }
+  this.init = async () => {
     render();
   };
 
-  const render = () => {
+  const render = async () => {
+    this.menu[this.category] = await MenuApi.getAllCoffeeMenu(this.category);
+    console.log(this.menu[this.category]);
     const menuTemplate = this.menu[this.category]
-      .map((menuItem, index) => {
-        return `<li data-menuId="${index}" class="menu-list-item d-flex items-center py-2">
-    <span class="w-100 pl-2 menu-name ${menuItem.soldOut ? "sold-out" : ""}">${
-          menuItem.name
-        }</span>
+      .map((menuItem) => {
+        return `<li data-menuId="${
+          menuItem.id
+        }" class="menu-list-item d-flex items-center py-2">
+    <span class="w-100 pl-2 menu-name ${
+      menuItem.isSoldOut ? "sold-out" : ""
+    }">${menuItem.name}</span>
     <button
     type="button"
     class="bg-gray-50 text-gray-500 text-sm mr-1 menu-soldout-button"
@@ -59,48 +73,42 @@ function App() {
     $("#menu-list").innerHTML = menuTemplate;
     updateTotalMenuCount();
   };
-  const addCoffeeMenu = () => {
+  const addCoffeeMenu = async () => {
     const menuName = $("#menu-name").value;
     if (!menuName) return alert("값을 입력해주세요.");
 
-    this.menu[this.category].push({ name: menuName, soldOut: false });
-    store.setStorage(this.menu);
-
+    await MenuApi.postCoffeMenu(this.category, menuName);
+    $("#menu-name").value = "";
     render();
   };
 
-  const updateCoffeMenu = (menu) => {
+  const updateCoffeMenu = async (menu) => {
     const menuId = menu.dataset.menuid;
     const menuName = menu.querySelector(".menu-name");
     const updatedInputValue = prompt(
       "수정할 값을 입력해주세요.",
       menuName.textContent
     );
-    this.menu[this.category][menuId].name = updatedInputValue;
-    store.setStorage(this.menu);
+    await MenuApi.updateCoffeMenu(this.category, menuId, updatedInputValue);
     render();
   };
 
-  const deleteCoffeMenu = (menu) => {
+  const deleteCoffeMenu = async (menu) => {
     const isRemoveConfirm = confirm("메뉴를 삭제하시겠습니다");
     const menuList = $("#menu-list");
     const menuId = menu.dataset.menuid;
 
     if (isRemoveConfirm) {
-      this.menu[this.category].splice(menuId, 1);
-      store.setStorage(this.menu);
+      await MenuApi.deleteCoffeMenu(this.category, menuId);
       render();
       updateTotalMenuCount(menuList);
     }
   };
 
-  const soldOutCoffeMenu = (menu) => {
+  const soldOutCoffeMenu = async (menu) => {
     const menuId = menu.dataset.menuid;
 
-    this.menu[this.category][menuId].soldOut =
-      !this.menu[this.category][menuId].soldOut;
-
-    store.setStorage(this.menu);
+    await MenuApi.toggleSoldOutCoffeMenu(this.category, menuId);
 
     render();
   };
@@ -135,11 +143,11 @@ function App() {
   $("#menu-list").addEventListener("click", (e) => {
     const menu = e.target.closest("li");
     if (e.target.classList.contains("menu-edit-button")) {
-      updateCoffeMenu(menu);
+      return updateCoffeMenu(menu);
     }
 
     if (e.target.classList.contains("menu-remove-button")) {
-      deleteCoffeMenu(menu);
+      return deleteCoffeMenu(menu);
     }
 
     if (e.target.classList.contains("menu-soldout-button")) {
