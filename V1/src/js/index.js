@@ -39,7 +39,6 @@ function App() {
 
   const render = async () => {
     this.menu[this.category] = await MenuApi.getAllCoffeeMenu(this.category);
-    console.log(this.menu[this.category]);
     const menuTemplate = this.menu[this.category]
       .map((menuItem) => {
         return `<li data-menuId="${
